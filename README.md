@@ -15,4 +15,6 @@ A lightweight style editor. Apply any styles you want to any site.
 ## TODO
 
 * Save on close tab/modal
+* Need onload script to run regardless of user interaction with the plugin icon
+  * Load the stored css (if any)
 * Improve formatting of textarea

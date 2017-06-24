@@ -91,4 +91,5 @@ const run = () => {
     });
 };
 
+// Run it
 document.addEventListener('DOMContentLoaded', run);
