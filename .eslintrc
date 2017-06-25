@@ -1,0 +1,6 @@
+{
+  "extends": ["zen/base"],
+  "globals": {
+    "chrome": true
+  }
+}
