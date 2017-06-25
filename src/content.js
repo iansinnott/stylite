@@ -1,8 +1,9 @@
 import {
   fetchStyles,
   FETCH_STYLES_SUCCESS,
+  UPDATE_STYLES_SUCCESS,
 } from './action.js';
-import { promisify } from './utils.js';
+import { promisify, debug } from './utils.js';
 
 const sendRuntimeMessage = promisify(chrome.runtime.sendMessage);
 
@@ -20,16 +21,17 @@ const applyStyles = (styles) => {
   }
 };
 
-const handleMessage = (request = {}, sender, sendRequest) => {
-  const { type, payload } = request;
+const handleMessage = (message = {}, sender, sendRequest) => {
+  const { type, payload } = message;
 
   switch (type) {
+  case UPDATE_STYLES_SUCCESS:
   case FETCH_STYLES_SUCCESS:
-    console.warn('Fetched styles. Applying...', request);
+    debug('Applying styles...', message);
     applyStyles(payload.styles);
     return;
   default:
-    console.warn(`Content script just saw "${type}" passed in request`, request);
+    debug(`Content script just saw "${type}" passed in message`, message);
     return;
   }
 };

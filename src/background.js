@@ -1,12 +1,20 @@
 import {
   FETCH_STYLES,
   FETCH_STYLES_SUCCESS,
+  UPDATE_STYLES_SUCCESS,
   FETCH_STATE,
   FETCH_STATE_SUCCESS,
   SAVE_STYLES,
   SAVE_STYLES_SUCCESS,
 } from './action.js';
-import { getStateById, storage, promisify } from './utils.js';
+import {
+  getCurrentTab,
+  getStateById,
+  storage,
+  promisify,
+  prop,
+  debug,
+} from './utils.js';
 
 // TODO: This doesn't work because chrome.tabs is not defined in a content
 // script... need to separate it out or else wrap it in func
@@ -42,6 +50,11 @@ const saveSuccess = (payload) => ({
   payload,
 });
 
+// TODO: make this more generic
+const pipe = (f, g) => (...args) => g(f(...args));
+
+const stateToContentStyles = pipe(getStyles, intensifyCSS);
+
 /**
  * NOTE: Return true for async. If you want async behavior you MUST return true,
  * otherwise chrome will invalided sendRequest and you will not get what you
@@ -62,8 +75,7 @@ const handleMessage = (request = {}, sender, sendRequest) => {
   case FETCH_STYLES:
     Promise.resolve(payload.id)
       .then(getStateById)
-      .then(getStyles)
-      .then(intensifyCSS)
+      .then(stateToContentStyles)
       .then(styles => sendRequest({
         type: FETCH_STYLES_SUCCESS,
         payload: { styles },
@@ -76,13 +88,20 @@ const handleMessage = (request = {}, sender, sendRequest) => {
         storage.set(record).then(() => firstEntry(record)))
       .then(saveSuccess)
       .then(action => {
-        console.warn('sending', action);
-        chrome.runtime.sendMessage(action);
-        sendRequest(action);
+        return getCurrentTab()
+          .then(prop('id'))
+          .then(tabId => {
+            debug('sending', action);
+            sendTabMessage(tabId, {
+              type: UPDATE_STYLES_SUCCESS,
+              payload: { styles: stateToContentStyles(action.payload) },
+            });
+            sendRequest(action);
+          });
       });
     return true;
   default:
-    console.warn(`Unsupported type "${type}" passed in request`);
+    debug(`Unsupported type "${type}" passed in request`);
     return;
   }
 };

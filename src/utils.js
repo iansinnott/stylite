@@ -56,3 +56,12 @@ export const getStateById = (id) => {
 };
 
 export const prop = key => obj => obj[key];
+
+/**
+ * A simple debug logger that will only log in development.
+ */
+export const debug = (...args) => {
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('[[STYLITE]]', ...args);
+  }
+};

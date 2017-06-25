@@ -4,6 +4,7 @@ import {
   getHostname,
   getCurrentTab,
   promisify,
+  debug,
 } from './utils.js';
 import { saveStyles, fetchState } from './action.js';
 
@@ -40,10 +41,7 @@ const run = () => {
     .then(id => sendRuntimeMessage(fetchState(id)))
     .then(prop('payload'))
     .then(renderDOM)
-    .catch(err => {
-      console.warn('Could not fetch storage');
-      console.warn(err);
-    });
+    .catch(err => debug('Error while rendering popup', err));
 };
 
 // Run it
