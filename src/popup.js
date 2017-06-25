@@ -1,13 +1,16 @@
 import {
+  prop,
   appendTo,
   getHostname,
   getCurrentTab,
-  storage,
-  getStateById,
+  promisify,
 } from './utils.js';
+import { saveStyles, fetchState } from './action.js';
+
+const sendRuntimeMessage = promisify(chrome.runtime.sendMessage);
 
 const run = () => {
-  const append = appendTo(document.body);
+  const append = appendTo(document.querySelector('#root'));
   const normalizeId = (tab) => getHostname(tab.url); // Use host as id
   const renderDOM = (state) => {
     const { id, contentState } = state;
@@ -26,9 +29,7 @@ const run = () => {
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Save';
     saveButton.onclick = () => {
-      if (!editor.value) return; // Do nothing if no styles were saved
-      storage.set({ [id]: { id, contentState: editor.value } })
-        .then(x => console.log('saved', x), err => console.error('oh no', err));
+      sendRuntimeMessage(saveStyles({ id, contentState: editor.value }));
     };
     append(saveButton);
   };
@@ -36,7 +37,8 @@ const run = () => {
   Promise.resolve()
     .then(getCurrentTab)
     .then(normalizeId)
-    .then(getStateById)
+    .then(id => sendRuntimeMessage(fetchState(id)))
+    .then(prop('payload'))
     .then(renderDOM)
     .catch(err => {
       console.warn('Could not fetch storage');

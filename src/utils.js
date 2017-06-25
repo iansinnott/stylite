@@ -54,3 +54,5 @@ export const getStateById = (id) => {
   return storage.get(id)
     .then((result = {}) => result[id] || { id }); // Default to object with id
 };
+
+export const prop = key => obj => obj[key];

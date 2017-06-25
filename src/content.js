@@ -2,6 +2,9 @@ import {
   fetchStyles,
   FETCH_STYLES_SUCCESS,
 } from './action.js';
+import { promisify } from './utils.js';
+
+const sendRuntimeMessage = promisify(chrome.runtime.sendMessage);
 
 const STYLE_TAG_SELECTOR='[data-stylite=true]';
 
@@ -35,4 +38,5 @@ const handleMessage = (request = {}, sender, sendRequest) => {
 chrome.runtime.onMessage.addListener(handleMessage);
 
 // initialize by fetching styles
-chrome.runtime.sendMessage(fetchStyles({ id: window.location.hostname }), handleMessage);
+sendRuntimeMessage(fetchStyles({ id: window.location.hostname }))
+  .then(handleMessage);
