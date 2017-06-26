@@ -34,6 +34,15 @@ Some useful Chrome Extension resources.
 
 [Permissions]: https://developer.chrome.com/extensions/declare_permissions
 
+## Dev
+
+You will probably warn Yarn installed, but you can also use NPM. If you're using NPM just replace `yarn` with `npm run` in all the commands below.
+
+* `yarn install`
+* `yarn watch` to during dev
+* `yarn test` to test things
+* `yarn build` to build and zip the app for distribution
+
 ## TODO
 
 * Change extension icon when styles are being applied
