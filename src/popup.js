@@ -14,6 +14,16 @@ import { saveStyles, fetchState } from './action.js';
 
 const sendRuntimeMessage = promisify(chrome.runtime.sendMessage);
 
+// Editor options: https://codemirror.net/doc/manual.html#config
+const editorOptions = {
+  mode: 'css',
+  lineNumbers: true,
+  styleActiveLine: true,
+  indentWithTabs: false,
+  tabSize: 2,
+  autofocus: true,
+};
+
 const run = () => {
   const append = appendTo(document.querySelector('#root'));
   const normalizeId = (tab) => getHostname(tab.url); // Use host as id
@@ -34,12 +44,7 @@ const run = () => {
     textarea.placeholder = 'Styles...';
     textarea.value = contentState || '';
     append(textarea);
-    const editor = CodeMirror.fromTextArea(textarea, {
-      mode: 'css',
-      lineNumbers: true,
-      styleActiveLine: true,
-      autofocus: true,
-    });
+    const editor = CodeMirror.fromTextArea(textarea, editorOptions);
 
     // Save on blur. This is the main way to save. There is no save button.
     // However, cmd+enter will save as well without closing the modal.
