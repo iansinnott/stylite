@@ -7,4 +7,7 @@ echo "Copying to ./dist...\nmanifest.json"
 cp ./web_modules/assets/* ./dist/
 echo "$(ls ./web_modules/assets/* | xargs -I _ basename _)"
 
+echo "Zipping final files..."
+zip -r stylite.zip ./dist
+
 echo "Done."

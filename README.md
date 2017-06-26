@@ -37,3 +37,4 @@ Some useful Chrome Extension resources.
 * Change extension icon when styles are being applied
 * Options page with listing of existing stylesheets
 * Convert `background.js` to event script rather than background script
+* Add automated script for packaging (see: https://developer.chrome.com/extensions/crx)
