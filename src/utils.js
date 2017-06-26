@@ -42,8 +42,6 @@ export const getHostname = (url) => {
 export const promisify = (fn) => (...args) => new Promise((resolve, reject) => {
   fn(...args, (...result) => {
     if (chrome.runtime.lastError) {
-      debug('oh no', fn.toString());
-      debugger
       reject(chrome.runtime.lastError);
       return;
     }
