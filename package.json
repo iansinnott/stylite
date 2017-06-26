@@ -1,6 +1,6 @@
 {
   "name": "stylite",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A super lightweight style editor. Apply any styles you want to any site.",
   "main": "src/manifest.json",
   "repository": "git@github.com:iansinnott/stylite.git",
