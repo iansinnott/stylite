@@ -2,6 +2,8 @@
 
 A super lightweight style editor. Apply any styles you want to any site.
 
+![Stylite Demo Gif](http://dropsinn.s3.amazonaws.com/stylite-demo.gif)
+
 ## Usage
 
 * Install it
