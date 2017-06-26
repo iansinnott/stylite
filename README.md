@@ -2,11 +2,13 @@
 
 A super lightweight style editor. Apply any styles you want to any site.
 
+👉 [Chrome Web Store Link](https://chrome.google.com/webstore/detail/stylite/alghcdmjanomnafjjmmhegabkilpbaea) 👈
+
 ![Stylite Demo Gif](http://dropsinn.s3.amazonaws.com/stylite-demo.gif)
 
 ## Usage
 
-* Install it
+* Install it ([Chrome Web Store Link](https://chrome.google.com/webstore/detail/stylite/alghcdmjanomnafjjmmhegabkilpbaea))
 * Click the paint palette icon to bring up the style editor for the current site
 * Click outside the editor to save
   * You can also press <kbd>cmd</kbd>+<kbd>enter</kbd> to save at any time
