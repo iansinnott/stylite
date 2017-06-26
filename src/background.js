@@ -9,25 +9,20 @@ import {
 } from './action.js';
 import {
   getCurrentTab,
-  getStateById,
-  storage,
+  wrapStorage,
   prop,
   debug,
+  intensifyCSS,
 } from './utils.js';
 
-const getStyles = (state) => state.contentState || '';
+const storage = wrapStorage(chrome.storage.sync);
 
-/**
- * Turn all CSS rules into !important rules. This is so that we can try not to
- * muck arround with ordering and specificity of CSS rules. If you style a tag
- * your styles get applied (in theory).
- */
-const intensifyCSS = (str) => str.replace(/(\S+)\s*;/gm, (_, match) => {
-  if (match === '!important') // Avoid double !important if user styles already have it
-    return match;
-  else
-    return `${match} !important`;
-});
+const getStateById = (id) => {
+  return storage.get(id)
+    .then((result = {}) => result[id] || { id }); // Default to object with id
+};
+
+const getStyles = (state) => state.contentState || '';
 
 /**
  * Transform an object with an id into a setter object for use with storage.set

@@ -7,6 +7,18 @@ export const debug = (...args) => {
   }
 };
 
+/**
+ * Turn all CSS rules into !important rules. This is so that we can try not to
+ * muck arround with ordering and specificity of CSS rules. If you style a tag
+ * your styles get applied (in theory).
+ */
+export const intensifyCSS = (str) => str.replace(/(\S+)\s*;/gm, (_, match) => {
+  if (match === '!important') // Avoid double !important if user styles already have it
+    return match + ';';
+  else
+    return `${match} !important;`;
+});
+
 // A tab is a plain object that provides information about the tab.
 // See https://developer.chrome.com/extensions/tabs#type-Tab
 //
@@ -56,12 +68,5 @@ export const wrapStorage = (storage) => ({
 });
 
 export const appendTo = target => el => target.appendChild(el);
-
-export const storage = wrapStorage(chrome.storage.sync);
-
-export const getStateById = (id) => {
-  return storage.get(id)
-    .then((result = {}) => result[id] || { id }); // Default to object with id
-};
 
 export const prop = key => obj => obj[key];
