@@ -1,3 +1,12 @@
+/**
+ * A simple debug logger that will only log in development.
+ */
+export const debug = (...args) => {
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('[[STYLITE]]', ...args);
+  }
+};
+
 // A tab is a plain object that provides information about the tab.
 // See https://developer.chrome.com/extensions/tabs#type-Tab
 //
@@ -33,6 +42,8 @@ export const getHostname = (url) => {
 export const promisify = (fn) => (...args) => new Promise((resolve, reject) => {
   fn(...args, (...result) => {
     if (chrome.runtime.lastError) {
+      debug('oh no', fn.toString());
+      debugger
       reject(chrome.runtime.lastError);
       return;
     }
@@ -56,12 +67,3 @@ export const getStateById = (id) => {
 };
 
 export const prop = key => obj => obj[key];
-
-/**
- * A simple debug logger that will only log in development.
- */
-export const debug = (...args) => {
-  if (process.env.NODE_ENV === 'development') {
-    console.warn('[[STYLITE]]', ...args);
-  }
-};

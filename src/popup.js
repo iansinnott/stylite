@@ -30,7 +30,7 @@ const run = () => {
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Save';
     saveButton.onclick = () => {
-      sendRuntimeMessage(saveStyles({ id, contentState: editor.value }));
+      chrome.runtime.sendMessage(saveStyles({ id, contentState: editor.value }));
     };
     append(saveButton);
   };

@@ -11,14 +11,9 @@ import {
   getCurrentTab,
   getStateById,
   storage,
-  promisify,
   prop,
   debug,
 } from './utils.js';
-
-// TODO: This doesn't work because chrome.tabs is not defined in a content
-// script... need to separate it out or else wrap it in func
-export const sendTabMessage = promisify(chrome.tabs.sendMessage);
 
 const getStyles = (state) => state.contentState || '';
 
@@ -92,14 +87,13 @@ const handleMessage = (request = {}, sender, sendRequest) => {
           .then(prop('id'))
           .then(tabId => {
             debug('sending', action);
-            sendTabMessage(tabId, {
+            chrome.tabs.sendMessage(tabId, {
               type: UPDATE_STYLES_SUCCESS,
               payload: { styles: stateToContentStyles(action.payload) },
             });
-            sendRequest(action);
           });
       });
-    return true;
+    return;
   default:
     debug(`Unsupported type "${type}" passed in request`);
     return;
