@@ -25,6 +25,15 @@ const run = () => {
     const editor = document.createElement('textarea');
     editor.placeholder = 'Styles...';
     editor.value = contentState || '';
+    editor.onblur = () => {
+      chrome.runtime.sendMessage(saveStyles({ id, contentState: editor.value }));
+    };
+    editor.onkeydown = (e) => {
+      if (e.which === 13 && e.metaKey) {
+        e.preventDefault();
+        editor.onblur();
+      }
+    };
     append(editor);
 
     const saveButton = document.createElement('button');
@@ -46,3 +55,5 @@ const run = () => {
 
 // Run it
 document.addEventListener('DOMContentLoaded', run);
+
+chrome.runtime.connect({ name: 'popup' });

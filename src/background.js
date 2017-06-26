@@ -101,3 +101,14 @@ const handleMessage = (request = {}, sender, sendRequest) => {
 };
 
 chrome.runtime.onMessage.addListener(handleMessage);
+
+const handlePopupClosed = (port) => {
+  debug('Popup Closing...', port);
+};
+
+const handlePopupConnect = port => {
+  debug('Connected.', port);
+  port.onDisconnect.addListener(handlePopupClosed);
+};
+
+chrome.runtime.onConnect.addListener(handlePopupConnect);
