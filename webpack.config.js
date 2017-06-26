@@ -12,6 +12,12 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
   },
+  module: {
+    rules: [{
+      test: /\.css$/,
+      use: ['style-loader', 'css-loader'],
+    }],
+  },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),

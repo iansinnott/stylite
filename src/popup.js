@@ -1,3 +1,7 @@
+import CodeMirror from 'codemirror';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/mode/css/css.js';
+
 import {
   prop,
   appendTo,
@@ -14,34 +18,54 @@ const run = () => {
   const append = appendTo(document.querySelector('#root'));
   const normalizeId = (tab) => getHostname(tab.url); // Use host as id
   const renderDOM = (state) => {
+    debug('Loaded STATE:', state);
     const { id, contentState } = state;
-    console.log('Loaded STATE:', state);
 
     const subhead = document.createElement('h2');
     subhead.className = 'subhead';
-    subhead.textContent = `Found results for: ${id}`;
+    subhead.textContent = `${id}`;
     append(subhead);
 
-    const editor = document.createElement('textarea');
-    editor.placeholder = 'Styles...';
-    editor.value = contentState || '';
-    editor.onblur = () => {
-      chrome.runtime.sendMessage(saveStyles({ id, contentState: editor.value }));
+    const textarea = document.createElement('textarea');
+    const save = () => {
+      editor.save(); // Copy codemirror data to textarea
+      chrome.runtime.sendMessage(saveStyles({ id, contentState: textarea.value }));
     };
-    editor.onkeydown = (e) => {
-      if (e.which === 13 && e.metaKey) {
-        e.preventDefault();
-        editor.onblur();
-      }
-    };
-    append(editor);
+    textarea.placeholder = 'Styles...';
+    textarea.value = contentState || '';
+    append(textarea);
+    const editor = CodeMirror.fromTextArea(textarea, {
+      mode: 'css',
+      lineNumbers: true,
+      styleActiveLine: true,
+      autofocus: true,
+    });
 
-    const saveButton = document.createElement('button');
-    saveButton.textContent = 'Save';
-    saveButton.onclick = () => {
-      chrome.runtime.sendMessage(saveStyles({ id, contentState: editor.value }));
+    // Save on blur. This is the main way to save. There is no save button.
+    // However, cmd+enter will save as well without closing the modal.
+    editor.on('blur', () => {
+      debug('Blur save');
+      save();
+    });
+
+    // Allow saving with cmd+enter
+    editor.on('keydown', (_, e) => {
+      if (e.which === 13 && e.metaKey) {
+        debug('Manual save');
+        e.preventDefault();
+        save();
+      }
+    });
+
+    const clearButton = document.createElement('button');
+    clearButton.className = 'clearButton';
+    clearButton.textContent = 'Clear';
+    clearButton.onclick = () => {
+      debug('Clearing...');
+      editor.setValue('');
+      save();
     };
-    append(saveButton);
+    append(clearButton);
   };
 
   Promise.resolve()

@@ -15,11 +15,16 @@
   "devDependencies": {
     "ava": "^0.19.1",
     "babel-eslint": "^7.2.3",
+    "css-loader": "^0.28.4",
     "eslint": "^4.1.0",
     "eslint-config-zen": "^2.0.4",
     "eslint-plugin-flowtype": "^2.34.0",
     "eslint-plugin-react": "^7.1.0",
     "html-webpack-plugin": "^2.28.0",
+    "style-loader": "^0.18.2",
     "webpack": "^2.6"
+  },
+  "dependencies": {
+    "codemirror": "^5.27.2"
   }
 }
